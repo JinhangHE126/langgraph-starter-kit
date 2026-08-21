@@ -110,11 +110,39 @@ export async function createMyApp() {
 
 ## Adding a New LLM Provider
 
-1. Install the LangChain provider package: `npm install @langchain/your-provider`
+1. Install the LangChain provider package: `npm install @langchain/your-provider` — see [Dependencies and the Lockfile](#dependencies-and-the-lockfile) before committing `package-lock.json`
 2. Add the provider case in `src/config/llm.ts`
 3. Add the API key mapping in `src/config/env.ts`
 4. Update `.env.example` with the new key
 5. Update the provider table in `README.md`
+
+## Dependencies and the Lockfile
+
+`package-lock.json` pins every package to an exact version and integrity hash, so it's committed to the repo and CI installs from it with `npm ci`. Changing it is fine and expected when your PR adds a dependency — just keep the change **minimal and reviewable**.
+
+**Adding a dependency:**
+
+```bash
+# start from main's lockfile so unrelated packages don't move
+git checkout main -- package-lock.json
+npm install @scope/your-package
+```
+
+**Please don't regenerate the whole lockfile.** `rm package-lock.json && npm install` re-resolves every package to the newest version matching its semver range. A one-package addition turns into hundreds of unrelated version bumps, which nobody can meaningfully review — and real problems hide in that noise.
+
+**Use the default registry.** If you work behind a mirror or corporate proxy (`registry.npmmirror.com`, Artifactory, etc.), its URLs get written into the lockfile. Check before committing:
+
+```bash
+grep -v "registry.npmjs.org" package-lock.json | grep "resolved"   # should be empty
+```
+
+To regenerate cleanly against the official registry:
+
+```bash
+npm install --registry=https://registry.npmjs.org
+```
+
+**Before you push:** `npm ci` must succeed. It fails if `package-lock.json` and `package.json` disagree, and CI runs it before typecheck or tests — so a desynced lockfile blocks the PR before anything else runs.
 
 ## Pull Request Guidelines
 
@@ -123,6 +151,7 @@ export async function createMyApp() {
 - **Make sure CI passes** — `npm test` and `npm run typecheck`
 - **Write clear commit messages** that explain *why*, not just *what*
 - **Update docs** if your change affects the public API or user-facing behavior
+- **Keep lockfile changes minimal** — see [Dependencies and the Lockfile](#dependencies-and-the-lockfile)
 
 Don't worry about making things perfect — we'll work together during review to get it right.
 
