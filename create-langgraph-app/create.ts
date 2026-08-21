@@ -218,7 +218,9 @@ if (requiredKey && !process.env[requiredKey]) {
 
 export const LLM_MODEL = process.env.LLM_MODEL || undefined;
 export const LLM_TEMPERATURE = Number(process.env.LLM_TEMPERATURE ?? 0);
-export const DEEPSEEK_THINKING = process.env.DEEPSEEK_THINKING ?? "disabled";
+// Uses || rather than ?? so an empty DEEPSEEK_THINKING= in .env falls back
+// to "disabled" instead of sending an invalid thinking type to the API.
+export const DEEPSEEK_THINKING = process.env.DEEPSEEK_THINKING || "disabled";
 export const PORT = Number(process.env.PORT ?? 3000);
 `;
 }

@@ -43,7 +43,9 @@ assertProviderKey(LLM_PROVIDER);
 
 export const LLM_MODEL = process.env.LLM_MODEL || undefined;
 export const LLM_TEMPERATURE = Number(process.env.LLM_TEMPERATURE ?? 0);
-export const DEEPSEEK_THINKING = process.env.DEEPSEEK_THINKING ?? "disabled";
+// `||` not `??`: an empty DEEPSEEK_THINKING= in .env must fall back to
+// "disabled" rather than sending an invalid thinking type to the API.
+export const DEEPSEEK_THINKING = process.env.DEEPSEEK_THINKING || "disabled";
 export const PORT = Number(process.env.PORT ?? 3000);
 export const DATABASE_URL = process.env.DATABASE_URL;
 export const MCP_SERVERS_PATH = process.env.MCP_SERVERS_PATH;

@@ -279,8 +279,8 @@ Beyond the routes listed in the README, `src/server/index.ts` handles:
 ## RAG and embeddings
 
 RAG needs an embeddings model, which is a separate capability from chat.
-`src/config/embeddings.ts` maps each provider to one; **Anthropic and Groq have
-no embeddings API**, so they fall back to OpenAI's — meaning RAG with those
+`src/config/embeddings.ts` maps each provider to one; **Anthropic, Groq and
+DeepSeek have no embeddings API**, so they fall back to OpenAI's — meaning RAG with those
 providers also requires `OPENAI_API_KEY`, even though `assertProviderKey()`
 only validates the chat provider's key.
 
