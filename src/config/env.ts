@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-const VALID_PROVIDERS = ["openai", "anthropic", "google", "groq", "ollama"] as const;
+const VALID_PROVIDERS = ["openai", "anthropic", "google", "groq", "ollama", "deepseek"] as const;
 export type LlmProvider = (typeof VALID_PROVIDERS)[number];
 
 function resolveProvider(): LlmProvider {
@@ -19,6 +19,7 @@ const API_KEY_MAP: Record<LlmProvider, string> = {
   google: "GOOGLE_API_KEY",
   groq: "GROQ_API_KEY",
   ollama: "", // no key needed
+  deepseek: "DEEPSEEK_API_KEY",
 };
 
 /**
@@ -42,6 +43,7 @@ assertProviderKey(LLM_PROVIDER);
 
 export const LLM_MODEL = process.env.LLM_MODEL || undefined;
 export const LLM_TEMPERATURE = Number(process.env.LLM_TEMPERATURE ?? 0);
+export const DEEPSEEK_THINKING = process.env.DEEPSEEK_THINKING ?? "disabled";
 export const PORT = Number(process.env.PORT ?? 3000);
 export const DATABASE_URL = process.env.DATABASE_URL;
 export const MCP_SERVERS_PATH = process.env.MCP_SERVERS_PATH;

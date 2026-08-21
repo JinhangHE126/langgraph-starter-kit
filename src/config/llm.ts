@@ -3,6 +3,7 @@ import {
   LLM_PROVIDER,
   LLM_MODEL,
   LLM_TEMPERATURE,
+  DEEPSEEK_THINKING,
   assertProviderKey,
   type LlmProvider,
 } from "./env";
@@ -13,6 +14,7 @@ const DEFAULTS: Record<LlmProvider, string> = {
   google: "gemini-2.0-flash",
   groq: "llama-3.3-70b-versatile",
   ollama: "llama3.2",
+  deepseek: "deepseek-v4-flash",
 };
 
 export interface LlmOptions {
@@ -47,6 +49,14 @@ async function createLlm(opts: LlmOptions = {}): Promise<BaseChatModel> {
     case "ollama": {
       const { ChatOllama } = await import("@langchain/ollama");
       return new ChatOllama({ model, temperature });
+    }
+    case "deepseek": {
+      const { ChatDeepSeek } = await import("@langchain/deepseek");
+      return new ChatDeepSeek({
+        model,
+        temperature,
+        modelKwargs: { thinking: { type: DEEPSEEK_THINKING } },
+      });
     }
     case "openai":
     default: {
